@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://cyu8304p6p56m"]
+
+[node name="StartScreen" type="Node2D"]
+
+[node name="ButtonControl" type="Button" parent="."]
+offset_left = -96.0
+offset_top = 72.0
+offset_right = 96.0
+offset_bottom = 120.0
+text = "Control mode"
+metadata/_edit_use_anchors_ = true
+
+[node name="ButtonPresentation" type="Button" parent="."]
+offset_left = -96.0
+offset_top = -56.0
+offset_right = 96.0
+offset_bottom = -8.0
+text = "Presentation mode"
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="."]
+offset_left = -128.0
+offset_top = -144.0
+offset_right = 128.0
+offset_bottom = -104.0
+theme_override_font_sizes/font_size = 24
+text = "Choose a mode!"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Label2" type="Label" parent="."]
+offset_left = -184.0
+offset_right = 182.0
+offset_bottom = 49.0
+theme_override_font_sizes/font_size = 14
+text = "The screen that should be shown to the players.
+Connects to the local server."
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Label3" type="Label" parent="."]
+offset_left = -184.0
+offset_top = 128.0
+offset_right = 182.0
+offset_bottom = 177.0
+theme_override_font_sizes/font_size = 14
+text = "Here you control what's shown to the players.
+Starts the local server."
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
