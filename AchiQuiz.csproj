@@ -3,4 +3,16 @@
     <TargetFramework>net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
+<ItemGroup>
+	<PackageReference Update="Achi.Godot.Common" Version="1.0.1" />
+</ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Godot.SourceGenerators" Version="4.5.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="GodotSharp" Version="4.5.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="GodotSharpEditor" Version="4.5.1" />
+  </ItemGroup>
 </Project>

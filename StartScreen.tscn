@@ -1,6 +1,9 @@
-[gd_scene format=3 uid="uid://cyu8304p6p56m"]
+[gd_scene load_steps=2 format=3 uid="uid://cyu8304p6p56m"]
+
+[ext_resource type="Script" uid="uid://b1ces5ojrppub" path="res://StartScreen.cs" id="1_s4vtk"]
 
 [node name="StartScreen" type="Node2D"]
+script = ExtResource("1_s4vtk")
 
 [node name="ButtonControl" type="Button" parent="."]
 offset_left = -96.0
