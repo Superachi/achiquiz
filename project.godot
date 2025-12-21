@@ -22,3 +22,7 @@ GameContainer="*res://GameContainer.cs"
 [dotnet]
 
 project/assembly_name="AchiQuiz"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/scene_to_csharp/plugin.cfg")
