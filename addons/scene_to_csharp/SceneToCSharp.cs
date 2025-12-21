@@ -2,6 +2,8 @@ using Godot;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Text;
+using AchiQuiz.addons.scene_to_csharp;
+using Newtonsoft.Json;
 
 [Tool]
 public partial class SceneToCSharp : EditorPlugin
@@ -9,12 +11,14 @@ public partial class SceneToCSharp : EditorPlugin
     private const string MenuItemName = "Generate C# nodes from Scene";
 
     private static readonly Regex NodeRegex =
-        new Regex(@"\[node\s+name=""(?<name>[^""]+)""\s+type=""(?<type>[^""]+)""",
-            RegexOptions.Compiled);
+        new Regex(
+            @"\[node\s+name=""(?<name>[^""]+)""\s+type=""(?<type>[^""]+)""\s+parent=""(?<parent>[^""]+)""",
+            RegexOptions.Compiled
+        );
 
     public override void _EnterTree()
     {
-        AddToolMenuItem(MenuItemName, Callable.From(Generate));
+        AddToolMenuItem(MenuItemName, new Callable(this, nameof(Generate)));
     }
 
     public override void _ExitTree()
@@ -64,20 +68,28 @@ public partial class SceneToCSharp : EditorPlugin
 
     private string Convert(string tscnText)
     {
-        var nodes = new List<(string Name, string Type)>();
+        var nodes = new List<SceneNodeInfo>();
 
         foreach (Match match in NodeRegex.Matches(tscnText))
         {
-            nodes.Add((
+            nodes.Add(new SceneNodeInfo(
                 match.Groups["name"].Value,
-                match.Groups["type"].Value
+                match.Groups["type"].Value,
+                match.Groups["parent"].Value
             ));
         }
 
+        GD.Print("Building paths for the following nodes:");
+        foreach (var nodeInfo in nodes)
+        {
+            GD.Print($"  - Node: {nodeInfo.Name}, Parent: {nodeInfo.Parent}, Type: {nodeInfo.Type}");
+        }
+
+        BuildFullPaths(nodes);
         return GenerateCSharp(nodes);
     }
 
-    private string GenerateCSharp(List<(string Name, string Type)> nodes)
+    private string GenerateCSharp(List<SceneNodeInfo> nodes)
     {
         var sb = new StringBuilder();
 
@@ -94,12 +106,37 @@ public partial class SceneToCSharp : EditorPlugin
         foreach (var node in nodes)
         {
             sb.AppendLine(
-                $"    _{ToCamelCase(node.Name)} = GetNode<{node.Type}>(\"{node.Name}\");");
+                $"    _{ToCamelCase(node.Name)} = GetNode<{node.Type}>(\"{node.FullPath}\");");
         }
 
         sb.AppendLine("}");
 
         return sb.ToString();
+    }
+
+    private void BuildFullPaths(List<SceneNodeInfo> nodes)
+    {
+        var lookup = new Dictionary<string, SceneNodeInfo>();
+
+        // Map node name → node
+        foreach (var node in nodes)
+            lookup[node.Name] = node;
+
+        foreach (var node in nodes)
+        {
+            node.FullPath = BuildPath(node, lookup);
+        }
+    }
+
+    private string BuildPath(SceneNodeInfo node, Dictionary<string, SceneNodeInfo> lookup)
+    {
+        if (node.Parent == ".")
+            return node.Name;
+
+        if (!lookup.TryGetValue(node.Parent, out var parentNode))
+            return node.Name; // fallback (shouldn't happen in valid scenes)
+
+        return $"{BuildPath(parentNode, lookup)}/{node.Name}";
     }
 
     private static string ToCamelCase(string input)

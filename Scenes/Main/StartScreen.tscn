@@ -31,6 +31,8 @@ text = "Choose a mode!"
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
+[node name="Testificate" type="Node" parent="Label"]
+
 [node name="Label2" type="Label" parent="."]
 offset_left = -184.0
 offset_right = 182.0
@@ -51,3 +53,5 @@ text = "Here you control what's shown to the players.
 Starts the local server."
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
+
+[connection signal="button_down" from="ButtonControl" to="." method="_on_button_control_button_down"]
